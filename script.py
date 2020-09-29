@@ -1,11 +1,9 @@
 # kindle-words
-# 0.12.3
+# 0.12.4
 
 ### import libs 
 import re # regex; extract words
 from googletrans import Translator # Google Translate API; https://pypi.org/project/googletrans
-# from progress.bar import Bar # progress bar lib; https://pypi.org/project/progress/
-# from tqdm import tqdm # progress bar lib v2
 import os # create new folders
 
 ### current date 
@@ -61,18 +59,7 @@ except TimeoutOccurred:
     with io.open(r'_old/test.txt', "r", encoding="utf-8") as source_file: # TODO: change from dev to prod
         read_source_file = source_file.read()
 
-### open source file; testing purposes
-# with io.open(r"_old/test.txt", "r", encoding="utf-8") as source_file: 
-# with io.open(r"200729.txt", "r", encoding="utf-8") as source_file: 
-    # read_source_file = source_file.read()
-
-### regex formula # TODO: remove unnecessary formulas once published to repo
-
-# regex = re.compile(r"^'?\w[\w']*(?:-\w+)*'?$", re.MULTILINE) # 6xx w/ dupes @ 200729.txt
-# regex = re.compile(r"^['\"\“]?(\w+)[\,\"\'\. ]?$", re.MULTILINE) # 886 w/ dupes @ 200729.txt 
-# regex = re.compile(r"^['\"\“]?(\w+)[\,\"\'\. ]?$|^'?\w[\w']*(?:-\w+)*'?$|^(?=\S*[’'-])([a-zA-Z’'-]+)|(?=.*\w)^(\w|')+$", re.MULTILINE) # experiment
-# regex_find_single_words = re.compile(r"^[\w'’“\-\.]+$", re.MULTILINE) # experiment
-
+### regex formula 
 regex_find_single_words = re.compile(r"^[\w'’“\-\.\,\—]+$", re.MULTILINE) # experiment; version to include , & —
 
 ### find single words in the source file 
@@ -118,11 +105,5 @@ with open(r"output/" + today_date + "/kindle-words_export-" + today_date + ".txt
         print (translation.origin, ' -> ', translation.text)
         sys.stdout = original_stdout # reset the standard output to its original value
         # counter += 1 # progress 
-        
-    # translations = Translator.translate(single_words, src="en", dest="pl")
-    # for translation in translations:
-    #     sys.stdout = export_translations # output to the file
-    #     print(translation.origin, ' -> ', translation.text)
-    #     sys.stdout = original_stdout # reset the standard output to its original value
 
 print("Script runtime: %.2f seconds" % (time.time() - start_time), "with", len(single_words), "translations.")

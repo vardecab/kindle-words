@@ -18,6 +18,7 @@
 
 ## Release History
 
+- 0.12.4: Cleared up the code for better readability.
 - 0.12.3: Fixes to `regex` formula so it also takes words with `,` & `—`.
 - 0.12.2: Print which folder was created for exported files.
 - 0.12.1: Renamed variables & export files' names to improve readability. 
