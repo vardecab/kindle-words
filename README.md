@@ -1,5 +1,7 @@
 # kindle-words
 
+🚧🚧🚧 As of Jan 2021, the script **does not** work [due to a bug in the underlying API](https://github.com/ssut/py-googletrans/issues/264). As soon as the bug in the API is fixed, I'll update the script. 🚧🚧🚧
+
 > Do something useful with your Kindle notes :) This script extracts individual words from `My Clippings` file hidden on your Kindle e-reader, translates them using Google Translate and exports the pair "original word" → "translation" into a `.txt` file from which you can learn these words or import them into an application such as [Quizlet](https://quizlet.com/).
 
 <!-- ## Screenshots -->
@@ -18,6 +20,7 @@
 
 ## Release History
 
+- 0.12.5: Bug in the API discovered.
 - 0.12.4: Cleared up the code for better readability.
 - 0.12.3: Fixes to `regex` formula so it also takes words with `,` & `—`.
 - 0.12.2: Print which folder was created for exported files.

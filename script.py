@@ -1,5 +1,6 @@
 # kindle-words
 # 0.12.4
+# !FIX: doesn't work due to https://github.com/ssut/py-googletrans/issues/264 
 
 ### import libs 
 import re # regex; extract words
@@ -52,11 +53,12 @@ except TimeoutOccurred:
 # select Kindle driver letter
 try:
     kindle_drive_letter = inputimeout(prompt="Enter the drive letter that is assigned to your Kindle (C/D/E/F): ", timeout=3)
-    with io.open(path.get(kindle_drive_letter,r'D:\documents\My Clippings.txt'), "r", encoding="utf-8") as source_file: # "r'D:\" as default/fallback 
+    with io.open(path.get(kindle_drive_letter,r'x:\documents\My Clippings.txt'), "r", encoding="utf-8") as source_file: 
         read_source_file = source_file.read()
 except TimeoutOccurred:
     print ("Time ran out, selecting default drive (D)...")
-    with io.open(r'_old/test.txt', "r", encoding="utf-8") as source_file: # TODO: change from dev to prod
+    # with io.open(r'_old/test.', "r", encoding="utf-8") as source_file: # *NOTE: test
+    with io.open(r'D:\documents\My Clippings.txt', "r", encoding="utf-8") as source_file: # *NOTE: prod 
         read_source_file = source_file.read()
 
 ### regex formula 
@@ -96,7 +98,7 @@ Translator = Translator()
 original_stdout = sys.stdout # save a reference to the original standard output
 # with open(r"C:\Users\x\Desktop\kindle-words_export.txt", "w", encoding="utf-8") as export_translations: # "a" → append, "w" → write
 with open(r"output/" + today_date + "/kindle-words_export-" + today_date + ".txt", "w", encoding="utf-8") as export_translations: # NOTE: "a" → append, "w" → write
-    translations = Translator.translate(single_words, src=select_source_language, dest=select_target_language) # NOTE: / FIXME: black box - wwhole thing is ran inside which means progress bar won't work
+    translations = Translator.translate(single_words, src=select_source_language, dest=select_target_language) # NOTE: / FIXME: black box - whole thing is ran inside which means progress bar won't work
     # for translation in tqdm(translations):
     # counter = 1 # progress
     for translation in translations:
@@ -106,4 +108,5 @@ with open(r"output/" + today_date + "/kindle-words_export-" + today_date + ".txt
         sys.stdout = original_stdout # reset the standard output to its original value
         # counter += 1 # progress 
 
-print("Script runtime: %.2f seconds" % (time.time() - start_time), "with", len(single_words), "translations.")
+### runtime 
+print("Script runtime: %.2f seconds" % (time.time() - start_time), "with", len(single_words), "translations.") 
