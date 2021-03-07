@@ -1,7 +1,5 @@
 # kindle-words
 
-🚧🚧🚧 As of Jan 2021, the script **does not** work [due to a bug in the underlying API](https://github.com/ssut/py-googletrans/issues/264). As soon as the bug in the API is fixed, I'll update the script. 🚧🚧🚧
-
 > Do something useful with your Kindle notes :) This script extracts individual words from `My Clippings` file hidden on your Kindle e-reader, translates them using Google Translate and exports the pair "original word" → "translation" into a `.txt` file from which you can learn these words or import them into an application such as [Quizlet](https://quizlet.com/).
 
 <!-- ## Screenshots -->
@@ -9,17 +7,18 @@
 <!-- ## How to use -->
 
 ## Roadmap
-
-- Use DeepL rather than Google Translate. 
-- Dictionary definitions.
-- <del>Improve regex formula to better deal with words that have special characters.</del>
-- <del>Extract single words from source file.</del>
-- <del>Output list line by line.</del> 
-- <del>Use API to translate words.</del>
-- <del>Skip the same words on subsequent imports.</del>
+ 
+- 🎯 Dictionary definitions.
+- ✅ <del>Improve regex formula to better deal with words that have special characters.</del>
+- ✅ <del>Extract single words from source file.</del>
+- ✅ <del>Output list line by line.</del> 
+- ✅ <del>Use API to translate words.</del>
+- ✅ <del>Skip the same words on subsequent imports.</del>
+- ❌ Use DeepL rather than Google Translate.
 
 ## Release History
 
+- 1.0.0: Using new API - [deep-translator](https://github.com/nidhaloff/deep-translator). 
 - 0.12.5: Bug in the API discovered.
 - 0.12.4: Cleared up the code for better readability.
 - 0.12.3: Fixes to `regex` formula so it also takes words with `,` & `—`.
@@ -47,10 +46,15 @@ Using [SemVer](http://semver.org/).
 GNU General Public License v3.0, see [LICENSE.md](https://github.com/vardecab/umbrella/blob/master/LICENSE).
 
 ## Acknowledgements
-
--   https://stackabuse.com/text-translation-with-google-translate-api-in-python/
-- https://pypi.org/project/googletrans
-- https://regex101.com/
-- https://stackoverflow.com/questions/56995919/change-python-3-7-default-encoding-from-cp1252-to-cp65001-aka-utf-8
-- https://www.geeksforgeeks.org/print-lists-in-python-4-different-ways/
-- https://stackabuse.com/writing-to-a-file-with-pythons-print-function/
+### Packages
+- [deep-translator](https://github.com/nidhaloff/deep-translator)
+- [inputimeout](https://pypi.org/project/inputimeout/)
+### Articles
+- [Text Translation with Google Translate API in Python](https://stackabuse.com/text-translation-with-google-translate-api-in-python/)
+- [Change python 3.7 default encoding from cp1252 to cp65001 aka UTF-8](https://stackoverflow.com/questions/56995919/change-python-3-7-default-encoding-from-cp1252-to-cp65001-aka-utf-8)
+- [Print lists in Python](https://www.geeksforgeeks.org/print-lists-in-python-4-different-ways/)
+- [Writing to a File with Python's print() Function](https://stackabuse.com/writing-to-a-file-with-pythons-print-function/)
+- [Python switch case](https://www.journaldev.com/15642/python-switch-case)
+- [Using .write function with multiple arguments for writing to a txt file - Python](https://stackoverflow.com/questions/47425891/using-write-function-with-multiple-arguments-for-writing-to-a-txt-file-python)
+### Tools
+- [regex101](https://regex101.com/)
