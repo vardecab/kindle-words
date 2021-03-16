@@ -1,7 +1,3 @@
-### current date & time
-from datetime import datetime # have current date & time in exported files' names
-this_run_datetime = datetime.strftime(datetime.now(), '%y%m%d-%H%M%S') # eg 210120-173112; https://www.w3schools.com/python/python_datetime.asp
-
 ### start + run time
 import time
 start_time = time.time() 
@@ -31,98 +27,134 @@ if platform == 'win32':
 
 ### input timeout
 from inputimeout import inputimeout, TimeoutOccurred # input timeout: https://pypi.org/project/inputimeout/
+timeout_time = 0 # *NOTE: test
+# timeout_time = 3 # *NOTE: prod
 
 # select source language
 try:
-    select_source_language = inputimeout(prompt="Enter the source language (default: en): ", timeout=3)
+    select_source_language = inputimeout(prompt="Enter the source language (default: en): ", timeout=timeout_time)
 except TimeoutOccurred:
     print ("Time ran out, selecting default source language (en)...")
     select_source_language = 'en'
 
 # select target language
 try:
-    select_target_language = inputimeout(prompt="Enter the target language (default: pl): ", timeout=3)
+    select_target_language = inputimeout(prompt="Enter the target language (default: pl): ", timeout=timeout_time)
 except TimeoutOccurred:
     print ("Time ran out, selecting default target language (pl)...")
     select_target_language = 'pl'
 
 # select Kindle drive letter
 try:
-    kindle_drive_letter = inputimeout(prompt="Enter the drive letter that is assigned to your Kindle (C/D/E/F): ", timeout=3)
+    kindle_drive_letter = inputimeout(prompt="Enter the drive letter that is assigned to your Kindle (C/D/E/F): ", timeout=timeout_time)
     with io.open(path.get(kindle_drive_letter,r'x:\documents\My Clippings.txt'), "r", encoding="utf-8") as source_file: 
         read_source_file = source_file.read()
 except TimeoutOccurred:
     print ("Time ran out.")
     # *NOTE: test
-    # with io.open(r'./_old/test.txt', "r", encoding="utf-8") as source_file: 
+    # with io.open(r'./test/test.txt', "r", encoding="utf-8") as source_file: 
     #     print('Selecting test file...')
-    #     read_source_file = source_file.read()
+    #     read_source_file = source_file.readlines() # read the file to [list]
     # *NOTE: prod 
     with io.open(r'D:\documents\My Clippings.txt', "r", encoding="utf-8") as source_file: 
         print('Selecting default drive (D)...')
-        read_source_file = source_file.read()
+        read_source_file = source_file.readlines() # read the file to [list]
+except FileNotFoundError: # TODO: better way to handle errors
+    print ('Looks like Kindle is not assigned to this drive letter. Try a different one next time. Exiting...')
+    exit() 
 
-### regex formula 
-import re # regex; extract words
-regex_find_single_words = re.compile(r"^[\w'’“\-\.\,\—]+$", re.MULTILINE) # experiment; version to include , & —
+### create output & data folders
+import os
+if not os.path.exists('output'):
+    os.makedirs('output')
+if not os.path.exists('data'):
+    os.makedirs('data')
 
-### find single words in the source file 
-print('Looking for words...')
-single_words_with_special_characters = re.findall(regex_find_single_words,read_source_file)
-# print ("Single words: ", single_words) # debug (with duplicates)
-print ("Found", len(single_words_with_special_characters), 'words.') # debug (how many words in the list)
+### list cleanup 
+read_source_file = [x for x in read_source_file if not any(x1.isdigit() for x1 in x)] # remove numbers
+read_source_file = [word.replace('\n','') for word in read_source_file] # remove character
+read_source_file = [word.replace(',','') for word in read_source_file] # remove character
+read_source_file = [word.replace('.','') for word in read_source_file] # remove character
+read_source_file = [word.replace(';','') for word in read_source_file] # remove character
+read_source_file = [word.replace('“','') for word in read_source_file] # remove character
+read_source_file = [word.replace('”','') for word in read_source_file] # remove character
+read_source_file = [word.replace('’','') for word in read_source_file] # remove character
+read_source_file = [word.replace('—','') for word in read_source_file] # remove character
+read_source_file = [word.replace('?','') for word in read_source_file] # remove character
+read_source_file = [word.replace('!','') for word in read_source_file] # remove character
+read_source_file = [word.replace('‘','') for word in read_source_file] # remove character
+read_source_file = [word.replace('==========','') for word in read_source_file] # remove characters
 
-### remove duplicates from the list
+### add single words to the new list aka remove sentences etc.
+single_words = [] # new list
+for element in range(len(read_source_file)):
+    if len(read_source_file[element].split()) == 1: # only single words
+        if len(read_source_file[element]) != 1: # don't add single characters
+            single_words.append(read_source_file[element].split())
+single_words = [x for l in single_words for x in l] # remove outer list; https://blog.finxter.com/python-list-of-lists/#Convert_List_of_Lists_to_One_List-2
+print ("Found", len(single_words), 'words in My Clippings file.') # debug (how many words in the list)
+
 print('Removing duplicates...')
-original_words = list(dict.fromkeys(single_words_with_special_characters)) # final list of original words without duplicates etc.
-print ("There are", len(original_words), 'words.') # debug (how many words in the list)
+single_words = list(dict.fromkeys(single_words)) # remove duplicates; https://www.w3schools.com/python/python_howto_remove_duplicates.asp
+print ("There are", len(single_words), 'unique words in My Clippings file.')
 
-## print single words line by line & export file 
-import os # create new folders
-# print (*single_words_with_special_characters, sep = "\n") # debug
-print('Creating a folder & exporting words to a file...')
-output_lines = '\n'.join(map(str, original_words)) # https://www.geeksforgeeks.org/print-lists-in-python-4-different-ways/
-if not os.path.isdir("/output/" + this_run_datetime):
-    os.mkdir("output/" + this_run_datetime)
-    print ("Folder created: " + this_run_datetime)
-with open(r"output/" + this_run_datetime + "/output-" + this_run_datetime + ".txt", "w", encoding="utf-8") as output: 
-    output.write(output_lines.lower())
+### open saved list
+import pickle
+try: 
+    with open ('data/saved_location', 'rb') as file_import:
+        saved_list = pickle.load(file_import)
+        # print(saved_list) # debug
+except FileNotFoundError:
+    print('First run - no file to load data.')
 
-### take single words with special characters from the file and remove unnecessary chars (eg ".-)
-print('Removing unnecessary characters...')
-with io.open(r"output/" + this_run_datetime + "/output-" + this_run_datetime + ".txt", "r", encoding="utf-8") as source_file:  
-    read_source_file = source_file.read()
+### comparison 
+try: 
+    difference = set(single_words) - set(saved_list) # what's new in single_words[]
+    if len(saved_list) == 0:
+        difference = set(single_words)
+except: 
+    difference = set(single_words)
+to_translate = list(difference) # convert set to list
+print("There are", len(to_translate), "new words to translate.")
 
-single_words = re.findall(r"\b\w*[-'’]\w*\b|\w+",read_source_file)
-output_lines = '\n'.join(map(str, single_words))
-with open(r"output/" + this_run_datetime + "/output-original_words-" + this_run_datetime + ".txt", "w", encoding="utf-8") as output: 
-    output.write(output_lines.lower())
+if len(to_translate) > 0:
+    output_lines = '\n'.join(map(str, to_translate))
+    with open(r"output/output-original_words.txt", "a", encoding="utf-8") as output: 
+        output.write(output_lines.lower())
 
-### translation
-from deep_translator import GoogleTranslator
+    ### translation
+    # split list to smaller lists to get around 5000-character-limit of deep-translator package
+    chunks = [to_translate[x:x+250] for x in range(0, len(to_translate), 250)] # split into sublists of 250 words each
+    print('List of words was split into:', len(chunks), 'chunk(s) for translation.') # debug; how many sublists are in this master list
 
-print('Translating...')
-translated = GoogleTranslator(source=select_source_language, target=select_target_language).translate_file(r"output/" + this_run_datetime + "/output-original_words-" + this_run_datetime + ".txt")
-# print(type(translated)) # debug
-with open(r"output/" + this_run_datetime + "/output-translated_words-" + this_run_datetime + ".txt", "w", encoding="utf-8") as export_translations: 
-    for word in translated:
-        # print(translated)
-        export_translations.write(word)
-print('Translated, nice!')
+    from deep_translator import GoogleTranslator, batch_detection
+    print('Translating...')
 
-### export a pair: original → translated 
-with open(r"output/" + this_run_datetime + "/output-translated_words-" + this_run_datetime + ".txt", "r", encoding="utf-8") as import_translations:
-    translated_words = import_translations.read().splitlines()
-# print(len(translated_words)) # debug; check if == 
+    ### export a pair: original → translated 
+    counter = 0
+    while counter <= len(chunks)-1: # -1 to make it work when len(chunks) == 1 and chunks[0] is the only one
+        translated_list = [] # new list
+        translated_list = GoogleTranslator(select_source_language, select_target_language).translate_batch(chunks[counter])
+        with open(r"output/kindle-words_export.txt", "a", encoding="utf-8") as export_pairs:
+            for original, translated in zip(chunks[counter], translated_list):
+                # print(str(original + " → " + translated)) # debug 
+                export_pairs.write((str(original + " → " + translated + "\n")).lower()) # write() can't take more than 1 argument so we need to str()
+        counter += 1
+    print('Words are translated & final file is exported!')
 
-with open(r"output/" + this_run_datetime + "/kindle-words_export-" + this_run_datetime + ".txt", "w", encoding="utf-8") as export_pairs:
-    for original, translated in zip(original_words, translated_words):
-        # print(str(original + " → " + translated)) # debug 
-        export_pairs.write((str(original + " → " + translated + "\n"))) # write() can't take more than 1 argument so we need to str()
-print('Final file exported!')
+    ### export list for future comparison 
+    with open('data/saved_location', 'wb') as file_export:
+        pickle.dump(single_words, file_export)
 
-### runtime 
-end_time = time.time() # run time end 
-run_time = round(end_time-start_time,2)
-print("Script run time:", run_time, "seconds.")
-# print("Script run time:", run_time, "seconds.""with", len(single_words), "translations.") 
+    ### runtime 
+    end_time = time.time() # run time end 
+    run_time = round(end_time-start_time,2)
+    print(len(to_translate), 'words were translated in:', run_time, "seconds (" + str(round(run_time/60,2)), "minutes).")
+
+else: 
+    print('Nothing new to translate. Exiting...')
+
+    ### runtime 
+    end_time = time.time() # run time end 
+    run_time = round(end_time-start_time,2)
+    print("Script run time:", run_time, "seconds. That's", round(run_time/60,2), "minutes.")

@@ -1,5 +1,18 @@
+# other
+.vscode
+.DS_Store
+
+# TODO
+TODO
+
+# old
 _old
+
+# test
+test
+
+# data
 output/*
 !output/.gitkeep
-TODO
-.DS_Store
+data/*
+!data/.gitkeep

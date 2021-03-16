@@ -2,22 +2,36 @@
 
 > Do something useful with your Kindle notes :) This script extracts individual words from `My Clippings` file hidden on your Kindle e-reader, translates them using Google Translate and exports the pair "original word" → "translation" into a `.txt` file from which you can learn these words or import them into an application such as [Quizlet](https://quizlet.com/).
 
-<!-- ## Screenshots -->
+## Screenshots
+![](https://user-images.githubusercontent.com/6877391/111391325-ac6d1f80-86b4-11eb-9816-470e442a1034.png)
+![](https://user-images.githubusercontent.com/6877391/111392214-631dcf80-86b6-11eb-99c1-95ba4c997834.png)
 
-<!-- ## How to use -->
+## How to use
+### Windows
+
+1. Connect your Kindle via USB cable to your computer.
+2. Download `script.py` from this repo.
+3. Run it. 
+4. Write source & target languages (eg. `en` & `es`).
+5. Write drive letter associated with Kindle (eg. `D` for D:).
+6. Wait a few minutes.
+7. Go to `output/kindle-words_export.txt` to check exported file.
+8. (optional) Add it to [Quizlet](https://quizlet.com/).
+9. Voilà ✨
 
 ## Roadmap
  
-- 🎯 Dictionary definitions.
+- 🎯 Dictionary definitions. (Need a different API)
 - ✅ <del>Improve regex formula to better deal with words that have special characters.</del>
 - ✅ <del>Extract single words from source file.</del>
 - ✅ <del>Output list line by line.</del> 
 - ✅ <del>Use API to translate words.</del>
 - ✅ <del>Skip the same words on subsequent imports.</del>
-- ❌ Use DeepL rather than Google Translate.
+- ❌ <del>Use DeepL rather than Google Translate.</del> (Requires paid subscription)
 
 ## Release History
 
+- 1.1: Quite a big re-write: it now works properly with `My Clippings.txt` file from Kindle - all bugs are fixed. Initial run takes ~ 10 minutes to complete (depending on the size of your file) but afterwards it's usually < 1 minute because data from previous run is stored locally for comparison - only new words are being translated to save time and improve speed.
 - 1.0.0: Using new API - [deep-translator](https://github.com/nidhaloff/deep-translator). 
 - 0.12.5: Bug in the API discovered.
 - 0.12.4: Cleared up the code for better readability.
