@@ -27,8 +27,8 @@ if platform == 'win32':
 
 ### input timeout
 from inputimeout import inputimeout, TimeoutOccurred # input timeout: https://pypi.org/project/inputimeout/
-timeout_time = 0 # *NOTE: test
-# timeout_time = 3 # *NOTE: prod
+# timeout_time = 0 # *NOTE: test
+timeout_time = 3 # *NOTE: prod
 
 # select source language
 try:
@@ -46,20 +46,24 @@ except TimeoutOccurred:
 
 # select Kindle drive letter
 try:
-    kindle_drive_letter = inputimeout(prompt="Enter the drive letter that is assigned to your Kindle (C/D/E/F): ", timeout=timeout_time)
+    kindle_drive_letter = inputimeout(prompt="Enter the drive letter that is assigned to your Kindle (C/D/E/F) (default: D): ", timeout=timeout_time)
     with io.open(path.get(kindle_drive_letter,r'x:\documents\My Clippings.txt'), "r", encoding="utf-8") as source_file: 
-        read_source_file = source_file.read()
+        read_source_file = source_file.readlines() # read the file to [list]
 except TimeoutOccurred:
-    print ("Time ran out.")
+    # print ("Time ran out.")
     # *NOTE: test
     # with io.open(r'./test/test.txt', "r", encoding="utf-8") as source_file: 
     #     print('Selecting test file...')
     #     read_source_file = source_file.readlines() # read the file to [list]
     # *NOTE: prod 
-    with io.open(r'D:\documents\My Clippings.txt', "r", encoding="utf-8") as source_file: 
-        print('Selecting default drive (D)...')
-        read_source_file = source_file.readlines() # read the file to [list]
-except FileNotFoundError: # TODO: better way to handle errors
+    try: 
+        with io.open(r'D:\documents\My Clippings.txt', "r", encoding="utf-8") as source_file: 
+            print('Time ran out, selecting default drive (D)...')
+            read_source_file = source_file.readlines() # read the file to [list]
+    except: 
+        print('Kindle is not connected. Connect your Kindle and try again. Exiting...')
+        exit()
+except FileNotFoundError: 
     print ('Looks like Kindle is not assigned to this drive letter. Try a different one next time. Exiting...')
     exit() 
 
@@ -69,6 +73,14 @@ if not os.path.exists('output'):
     os.makedirs('output')
 if not os.path.exists('data'):
     os.makedirs('data')
+
+### show the last word that was added on the previous run 
+with open('output/output-original_words.txt', 'r') as file:
+    lines = file.read().splitlines()
+    last_word = lines[-1]
+    # print(last_word) # debug 
+with open('output/last_word.txt', 'w') as file: 
+    file.write(last_word)
 
 ### list cleanup 
 read_source_file = [x for x in read_source_file if not any(x1.isdigit() for x1 in x)] # remove numbers
@@ -150,7 +162,7 @@ if len(to_translate) > 0:
     end_time = time.time() # run time end 
     run_time = round(end_time-start_time,2)
     print(len(to_translate), 'words were translated in:', run_time, "seconds (" + str(round(run_time/60,2)), "minutes).")
-
+    
 else: 
     print('Nothing new to translate. Exiting...')
 

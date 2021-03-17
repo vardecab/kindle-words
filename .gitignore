@@ -16,3 +16,10 @@ output/*
 !output/.gitkeep
 data/*
 !data/.gitkeep
+
+# build 
+script.spec
+build
+dist
+__pycache__
+rebuild.bat

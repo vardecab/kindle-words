@@ -10,11 +10,11 @@
 ### Windows
 
 1. Connect your Kindle via USB cable to your computer.
-2. Download `script.py` from this repo.
+2. Download `script.exe` from [Releases](https://github.com/vardecab/kindle-words/releases).
 3. Run it. 
-4. Write source & target languages (eg. `en` & `es`).
-5. Write drive letter associated with Kindle (eg. `D` for D:).
-6. Wait a few minutes.
+4. Write source & target languages or wait if defaults (`en` & `pl`) are ok.
+5. Write drive letter associated with Kindle or wait if default (`D`) is ok.
+6. Wait a few minutes - words are being translated.
 7. Go to `output/kindle-words_export.txt` to check exported file.
 8. (optional) Add it to [Quizlet](https://quizlet.com/).
 9. Voilà ✨
@@ -31,6 +31,7 @@
 
 ## Release History
 
+- 1.1.1: Fixed `io.open` bug; added some `try/except` to catch more errors; re-enabled `timeout_time`; added `last_word` export so it's easy to see which words are new and which are old. Published in [Releases](https://github.com/vardecab/kindle-words/releases).
 - 1.1: Quite a big re-write: it now works properly with `My Clippings.txt` file from Kindle - all bugs are fixed. Initial run takes ~ 10 minutes to complete (depending on the size of your file) but afterwards it's usually < 1 minute because data from previous run is stored locally for comparison - only new words are being translated to save time and improve speed.
 - 1.0.0: Using new API - [deep-translator](https://github.com/nidhaloff/deep-translator). 
 - 0.12.5: Bug in the API discovered.
