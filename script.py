@@ -75,12 +75,14 @@ if not os.path.exists('data'):
     os.makedirs('data')
 
 ### show the last word that was added on the previous run 
-with open('output/output-original_words.txt', 'r') as file:
-    lines = file.read().splitlines()
-    last_word = lines[-1]
-    # print(last_word) # debug 
-with open('output/last_word.txt', 'w') as file: 
-    file.write(last_word)
+try: 
+    with open('output/output-original_words.txt', 'r') as file:
+        lines = file.read().splitlines()
+        last_word = lines[-1]
+    with open('output/last_word.txt', 'w') as file: 
+        file.write(last_word)
+except FileNotFoundError:
+    print('First run - no file to load data.')
 
 ### list cleanup 
 read_source_file = [x for x in read_source_file if not any(x1.isdigit() for x1 in x)] # remove numbers
