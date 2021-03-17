@@ -23,3 +23,5 @@ build
 dist
 __pycache__
 rebuild.bat
+kindle-words_*.exe
+script.exe
