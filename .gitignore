@@ -10,6 +10,8 @@ _old
 
 # test
 test
+output-*
+data-*
 
 # data
 output/*

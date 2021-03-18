@@ -76,7 +76,7 @@ if platform == 'win32': # Windows
 
 elif platform == "darwin": # macOS
     try: 
-        kindle_name = inputimeout(prompt="Enter your Kindle's name: ", timeout=timeout_time).lower()
+        kindle_name = inputimeout(prompt="Enter your Kindle's name (default: Kindle): ", timeout=timeout_time).lower()
         with io.open(f'/Volumes/{kindle_name}/documents/My Clippings.txt', "r", encoding="utf-8") as source_file: 
             read_source_file = source_file.readlines() # read the file to [list]
     except TimeoutOccurred: 
@@ -114,6 +114,7 @@ read_source_file = [word.replace('\n','') for word in read_source_file] # remove
 read_source_file = [word.replace(',','') for word in read_source_file] # remove character
 read_source_file = [word.replace('.','') for word in read_source_file] # remove character
 read_source_file = [word.replace(';','') for word in read_source_file] # remove character
+read_source_file = [word.replace(':','') for word in read_source_file] # remove character
 read_source_file = [word.replace('“','') for word in read_source_file] # remove character
 read_source_file = [word.replace('”','') for word in read_source_file] # remove character
 read_source_file = [word.replace('’','') for word in read_source_file] # remove character
@@ -136,6 +137,16 @@ print('Removing duplicates...')
 single_words = list(dict.fromkeys(single_words)) # remove duplicates; https://www.w3schools.com/python/python_howto_remove_duplicates.asp
 print ("There are", len(single_words), 'unique words in My Clippings file.')
 
+### skip words already in target_language
+from langdetect import detect # language detection
+
+words = []
+print(f'Removing words already in {select_target_language.upper()}...')
+for word in range(len(single_words)):
+    if detect(single_words[word]) != select_target_language: # if a word is already in the target_language then skip it
+        words.append(single_words[word])
+print(f'Without words already in {select_target_language.upper()}, there are {len(words)} words.')
+
 ### open saved list
 import pickle
 try: 
@@ -147,17 +158,17 @@ except FileNotFoundError:
 
 ### comparison 
 try: 
-    difference = set(single_words) - set(saved_list) # what's new in single_words[]
+    difference = set(words) - set(saved_list) # what's new in words[]
     if len(saved_list) == 0:
-        difference = set(single_words)
+        difference = set(words)
 except: 
-    difference = set(single_words)
+    difference = set(words)
 to_translate = list(difference) # convert set to list
 print("There are", len(to_translate), "new words to translate.")
 
 if len(to_translate) > 0:
     output_lines = '\n'.join(map(str, to_translate))
-    with open(r"output/output-original_words.txt", "a", encoding="utf-8") as output: 
+    with open(r"output/output-original_words.txt", "w", encoding="utf-8") as output: 
         output.write(output_lines.lower())
 
     ### translation
@@ -165,7 +176,7 @@ if len(to_translate) > 0:
     chunks = [to_translate[x:x+250] for x in range(0, len(to_translate), 250)] # split into sublists of 250 words each
     print('List of words was split into:', len(chunks), 'chunk(s) for translation.') # debug; how many sublists are in this master list
 
-    from deep_translator import GoogleTranslator, batch_detection
+    from deep_translator import GoogleTranslator
     print('Translating...')
 
     ### export a pair: original → translated 
@@ -188,7 +199,7 @@ if len(to_translate) > 0:
 
     ### export list for future comparison 
     with open('data/saved_location', 'wb') as file_export:
-        pickle.dump(single_words, file_export)
+        pickle.dump(words, file_export)
 
     ### runtime 
     end_time = time.time() # run time end 

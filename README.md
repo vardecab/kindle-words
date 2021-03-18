@@ -41,6 +41,7 @@ Save.
 pip install inputimeout
 pip install deep_translator 
 pip install pync
+pip install langdetect
 ```
 3. Navigate to the folder you cloned/downloaded & run the script:
 ```sh
@@ -66,12 +67,13 @@ python script.py
 
 ## Release History
 
+- 1.2: Added language detection to skip translation of words already in desired language.
 - 1.1.4: Added notifications for macOS & Windows.
 - 1.1.3: Added support for macOS.
 - 1.1.2: Added `try/except` to fix a `FileNotFoundError` error.
 - 1.1.1: Fixed `io.open` bug; added some `try/except` to catch more errors; re-enabled `timeout_time`; added `last_word` export so it's easy to see which words are new and which are old. Published in [Releases](https://github.com/vardecab/kindle-words/releases).
 - 1.1: Quite a big re-write: it now works properly with `My Clippings.txt` file from Kindle - all bugs are fixed. Initial run takes ~ 10 minutes to complete (depending on the size of your file) but afterwards it's usually < 1 minute because data from previous run is stored locally for comparison - only new words are being translated to save time and improve speed.
-- 1.0.0: Using new API - [deep-translator](https://github.com/nidhaloff/deep-translator). 
+- 1.0.0: Using new backend - [deep-translator](https://github.com/nidhaloff/deep-translator). 
 - 0.12.5: Bug in the API discovered.
 - 0.12.4: Cleared up the code for better readability.
 - 0.12.3: Fixes to `regex` formula so it also takes words with `,` & `—`.
