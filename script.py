@@ -9,8 +9,15 @@ import io
 sys.stdout = io.TextIOWrapper(sys.stdout.detach(), encoding = 'utf-8')
 sys.stderr = io.TextIOWrapper(sys.stderr.detach(), encoding = 'utf-8')
 
+### notifications 
+# imports
+from sys import platform # check platform (Windows/macOS)
+if platform == "darwin":
+    import pync
+elif platform == 'win32':
+    import win10toast_click
+
 ### path to file: https://www.journaldev.com/15642/python-switch-case
-from sys import platform # check platform (Windows/Linux/macOS)
 if platform == 'win32':
     path = {
     'C' : r'C:\documents\My Clippings.txt',
@@ -27,6 +34,7 @@ if platform == 'win32':
 from inputimeout import inputimeout, TimeoutOccurred # input timeout: https://pypi.org/project/inputimeout/
 # timeout_time = 0 # *NOTE: test
 timeout_time = 5 # *NOTE: prod
+print(f'Script will wait {timeout_time} seconds for the input and then will continue with a default value.')
 
 # select source language
 try:
@@ -172,6 +180,12 @@ if len(to_translate) > 0:
         counter += 1
     print('Words are translated & final file is exported!')
 
+    ### notifications 
+    if platform == "darwin":
+        pync.notify(f'Translated {len(to_translate)} words.', title='kindle-words', contentImage="https://i.postimg.cc/3R0tLQ3H/translation.png", sound="Funk") # appIcon="" doesn't work, using contentImage instead
+    elif platform == "win32":
+        toaster.show_toast(msg=f'Translated {len(to_translate)} words.', title="kindle-words",  icon_path="./icons/translation.ico", duration=None, threaded=True) # duration=None - leave notification in Notification Center; threaded=True - rest of the script will be allowed to be executed while the notification is still active
+
     ### export list for future comparison 
     with open('data/saved_location', 'wb') as file_export:
         pickle.dump(single_words, file_export)
@@ -181,7 +195,13 @@ if len(to_translate) > 0:
     run_time = round(end_time-start_time,2)
     print(len(to_translate), 'words were translated in:', run_time, "seconds (" + str(round(run_time/60,2)), "minutes).")
     
-else: 
+else:
+    ### notifications 
+    if platform == "darwin":
+        pync.notify(f'Nothing new to translate.', title='kindle-words', contentImage="https://i.postimg.cc/3R0tLQ3H/translation.png", sound="Funk") # appIcon="" doesn't work, using contentImage instead
+    elif platform == "win32":
+        toaster.show_toast(msg=f'Nothing new to translate.', title="kindle-words",  icon_path="./icons/translation.ico", duration=None, threaded=True) # duration=None - leave notification in Notification Center; threaded=True - rest of the script will be allowed to be executed while the notification is still active
+
     print('Nothing new to translate. Exiting...')
 
     ### runtime 
