@@ -2,9 +2,12 @@
 
 > Do something useful with your Kindle notes :) This script extracts individual words from `My Clippings` file hidden on your Kindle e-reader, translates them using Google Translate and exports the pair "original word" → "translation" into a `.txt` file from which you can learn these words or import them into an application such as [Quizlet](https://quizlet.com/).
 
+Script skips sentences, numbers, special characters, etc. — only single words are being translated. Words in desired language are skipped.
+
 ## Screenshots
 ![output](https://user-images.githubusercontent.com/6877391/111391325-ac6d1f80-86b4-11eb-9816-470e442a1034.png)
 ![macOS notification](https://user-images.githubusercontent.com/6877391/111626634-8e0b3f00-87ee-11eb-8b1c-0379db96bc8c.jpeg)
+![nothing](https://user-images.githubusercontent.com/6877391/111667392-f40abd00-8814-11eb-9b66-9d9ec19b92d5.png)
 ![sets in Quizlet](https://user-images.githubusercontent.com/6877391/111392214-631dcf80-86b6-11eb-99c1-95ba4c997834.png)
 
 ## How to use
@@ -17,8 +20,8 @@ pip show deep-translator
 ```
 Open `google_trans.py` & go to line 177. Edit:
 ```py
-# sleep(2) # => 33.33 mins to translate 1000 words
-sleep(0.1) # => 1.66 mins to translate 1000 words
+# sleep(2) # => ~ 33.33 mins to translate 1000 words
+sleep(0.1) # => ~ 1.66 mins to translate 1000 words
 ```
 Save.
 
@@ -39,7 +42,7 @@ Save.
 3. Open Terminal/iTerm and install necessary packages (use `pip` or `pip3`):
 ```py
 pip install inputimeout
-pip install deep_translator 
+pip install deep-translator 
 pip install pync
 pip install langdetect
 ```
@@ -67,11 +70,11 @@ python script.py
 
 ## Release History
 
-- 1.2: Added language detection to skip translation of words already in desired language.
-- 1.1.4: Added notifications for macOS & Windows.
-- 1.1.3: Added support for macOS.
-- 1.1.2: Added `try/except` to fix a `FileNotFoundError` error.
-- 1.1.1: Fixed `io.open` bug; added some `try/except` to catch more errors; re-enabled `timeout_time`; added `last_word` export so it's easy to see which words are new and which are old. Published in [Releases](https://github.com/vardecab/kindle-words/releases).
+- 1.5: Added language detection to skip translation of words already in desired language.
+- 1.4: Added notifications for macOS & Windows.
+- 1.3: Added support for macOS.
+- 1.2.1: Added `try/except` to fix a `FileNotFoundError` error.
+- 1.2: Fixed `io.open` bug; added some `try/except` to catch more errors; re-enabled `timeout_time`; added `last_word` export so it's easy to see which words are new and which are old. Published in [Releases](https://github.com/vardecab/kindle-words/releases).
 - 1.1: Quite a big re-write: it now works properly with `My Clippings.txt` file from Kindle - all bugs are fixed. Initial run takes ~ 10 minutes to complete (depending on the size of your file) but afterwards it's usually < 1 minute because data from previous run is stored locally for comparison - only new words are being translated to save time and improve speed.
 - 1.0.0: Using new backend - [deep-translator](https://github.com/nidhaloff/deep-translator). 
 - 0.12.5: Bug in the API discovered.
@@ -106,6 +109,7 @@ GNU General Public License v3.0, see [LICENSE.md](https://github.com/vardecab/um
 - [inputimeout](https://pypi.org/project/inputimeout/)
 - [win10toast-click](https://github.com/vardecab/win10toast-click)
 - [pync](https://github.com/SeTeM/pync)
+- [langdetect](https://pypi.org/project/langdetect/)
 ### Articles
 - [Text Translation with Google Translate API in Python](https://stackabuse.com/text-translation-with-google-translate-api-in-python/)
 - [Change python 3.7 default encoding from cp1252 to cp65001 aka UTF-8](https://stackoverflow.com/questions/56995919/change-python-3-7-default-encoding-from-cp1252-to-cp65001-aka-utf-8)
