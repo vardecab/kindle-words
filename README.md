@@ -119,5 +119,6 @@ GNU General Public License v3.0, see [LICENSE.md](https://github.com/vardecab/um
 - [Using .write function with multiple arguments for writing to a txt file - Python](https://stackoverflow.com/questions/47425891/using-write-function-with-multiple-arguments-for-writing-to-a-txt-file-python)
 ### Tools
 - [regex101](https://regex101.com/)
+- [regexr](https://regexr.com/)
 ### Other
 - [Flaticon / Freepik](https://www.flaticon.com/)
