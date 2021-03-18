@@ -22,13 +22,11 @@ if platform == 'win32':
     'F' : r'F:\documents\My Clippings.txt',
     'f' : r'F:\documents\My Clippings.txt'
     }
-# elif platform == "darwin": # macOS
-    # path = {} # TODO
 
 ### input timeout
 from inputimeout import inputimeout, TimeoutOccurred # input timeout: https://pypi.org/project/inputimeout/
 # timeout_time = 0 # *NOTE: test
-timeout_time = 3 # *NOTE: prod
+timeout_time = 5 # *NOTE: prod
 
 # select source language
 try:
@@ -45,27 +43,45 @@ except TimeoutOccurred:
     select_target_language = 'pl'
 
 # select Kindle drive letter
-try:
-    kindle_drive_letter = inputimeout(prompt="Enter the drive letter that is assigned to your Kindle (C/D/E/F) (default: D): ", timeout=timeout_time)
-    with io.open(path.get(kindle_drive_letter,r'x:\documents\My Clippings.txt'), "r", encoding="utf-8") as source_file: 
-        read_source_file = source_file.readlines() # read the file to [list]
-except TimeoutOccurred:
-    # print ("Time ran out.")
-    # *NOTE: test
-    # with io.open(r'./test/test.txt', "r", encoding="utf-8") as source_file: 
-    #     print('Selecting test file...')
-    #     read_source_file = source_file.readlines() # read the file to [list]
-    # *NOTE: prod 
-    try: 
-        with io.open(r'D:\documents\My Clippings.txt', "r", encoding="utf-8") as source_file: 
-            print('Time ran out, selecting default drive (D)...')
+if platform == 'win32': # Windows
+    try:
+        kindle_drive_letter = inputimeout(prompt="Enter the drive letter that is assigned to your Kindle (C/D/E/F) (default: D): ", timeout=timeout_time)
+        with io.open(path.get(kindle_drive_letter,r'x:\documents\My Clippings.txt'), "r", encoding="utf-8") as source_file: 
             read_source_file = source_file.readlines() # read the file to [list]
-    except: 
-        print('Kindle is not connected. Connect your Kindle and try again. Exiting...')
+    except TimeoutOccurred:
+        # print ("Time ran out.")
+        # *NOTE: test
+        # with io.open(r'./test/test.txt', "r", encoding="utf-8") as source_file: 
+        #     print('Selecting test file...')
+        #     read_source_file = source_file.readlines() # read the file to [list]
+        # *NOTE: prod 
+        try: 
+            with io.open(r'D:\documents\My Clippings.txt', "r", encoding="utf-8") as source_file: 
+                print('Time ran out, selecting default drive (D)...')
+                read_source_file = source_file.readlines() # read the file to [list]
+        except: 
+            print('Kindle is either not connected or has a custom drive assignment. Try again. Exiting...')
+            exit()
+    except FileNotFoundError: 
+        print ('Looks like Kindle is not assigned to this drive letter. Try a different one next time. Exiting...')
+        exit() 
+
+elif platform == "darwin": # macOS
+    try: 
+        kindle_name = inputimeout(prompt="Enter your Kindle's name: ", timeout=timeout_time).lower()
+        with io.open(f'/Volumes/{kindle_name}/documents/My Clippings.txt', "r", encoding="utf-8") as source_file: 
+            read_source_file = source_file.readlines() # read the file to [list]
+    except TimeoutOccurred: 
+        try: 
+            with io.open('/Volumes/Kindle/documents/My Clippings.txt', "r", encoding="utf-8") as source_file: 
+                print('Time ran out, choosing default name (Kindle)...')
+                read_source_file = source_file.readlines() # read the file to [list]
+        except: 
+            print('Kindle is either not connected or it has a custom name. Try again. Exiting...')
+            exit()
+    except FileNotFoundError: 
+        print ("Looks like this name doesn't work. Try a different one next time. Exiting...") 
         exit()
-except FileNotFoundError: 
-    print ('Looks like Kindle is not assigned to this drive letter. Try a different one next time. Exiting...')
-    exit() 
 
 ### create output & data folders
 import os

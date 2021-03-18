@@ -8,14 +8,33 @@
 
 ## How to use
 ### Windows
-
 1. Connect your Kindle via USB cable to your computer.
 2. Download `script.zip` from [Releases](https://github.com/vardecab/kindle-words/releases).
-3. Run `script.exe`. 
+3. Go to the download location, unzip & run `script.exe`. 
 4. Write source & target languages or wait if defaults (`en` & `pl`) are ok.
 5. Write drive letter associated with Kindle or wait if default (`D`) is ok.
 6. Wait a few minutes - words are being translated.
 7. Go to `script\output\kindle-words_export.txt` to check exported file.
+8. (optional) Add it to [Quizlet](https://quizlet.com/).
+9. Voilà ✨
+
+### macOS
+1. Connect your Kindle via USB cable to your Mac.
+2. Clone or download this repo.
+3. Open Terminal/iTerm and install necessary packages (use `pip` or `pip3`):
+```py
+pip install inputimeout
+pip install deep_translator 
+```
+3. Navigate to the folder you cloned/downloaded & run the script:
+```sh
+cd '/Users/USER/Downloads/kindle-words'
+python script.py
+``` 
+4. Write source & target languages or wait if defaults (`en` & `pl`) are ok.
+5. Write your Kindle's name or wait if default (`Kindle`) is ok.
+6. Wait a few minutes - words are being translated.
+7. Go to `output/kindle-words_export.txt` to check exported file.
 8. (optional) Add it to [Quizlet](https://quizlet.com/).
 9. Voilà ✨
 
@@ -31,6 +50,7 @@
 
 ## Release History
 
+- 1.1.3: Added support for macOS.
 - 1.1.2: Added `try/except` to fix a `FileNotFoundError` error.
 - 1.1.1: Fixed `io.open` bug; added some `try/except` to catch more errors; re-enabled `timeout_time`; added `last_word` export so it's easy to see which words are new and which are old. Published in [Releases](https://github.com/vardecab/kindle-words/releases).
 - 1.1: Quite a big re-write: it now works properly with `My Clippings.txt` file from Kindle - all bugs are fixed. Initial run takes ~ 10 minutes to complete (depending on the size of your file) but afterwards it's usually < 1 minute because data from previous run is stored locally for comparison - only new words are being translated to save time and improve speed.
