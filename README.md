@@ -1,5 +1,7 @@
 # kindle-words
 
+![](https://img.shields.io/badge/platform-Windows%20%7C%20macOS-blue)
+
 > Do something useful with your Kindle notes :) This script extracts individual words from `My Clippings` file hidden on your Kindle e-reader, translates them using Google Translate and exports the pair "original word" → "translation" into a `.txt` file from which you can learn these words or import them into an application such as [Quizlet](https://quizlet.com/).
 
 Script skips sentences, numbers, special characters, etc. — only single words are being translated. Words in desired language are skipped.
@@ -70,6 +72,7 @@ python script.py
 
 ## Release History
 
+- 1.5.1: Fixed Windows 10 notifications bug.
 - 1.5: Added language detection to skip translation of words already in desired language.
 - 1.4: Added notifications for macOS & Windows.
 - 1.3: Added support for macOS.
@@ -101,7 +104,9 @@ Using [SemVer](http://semver.org/).
 
 ## License
 
-GNU General Public License v3.0, see [LICENSE.md](https://github.com/vardecab/umbrella/blob/master/LICENSE).
+![](https://img.shields.io/github/license/vardecab/kindle-words)
+<!-- 
+GNU General Public License v3.0, see [LICENSE.md](https://github.com/vardecab/umbrella/blob/master/LICENSE). -->
 
 ## Acknowledgements
 ### Packages
@@ -122,3 +127,9 @@ GNU General Public License v3.0, see [LICENSE.md](https://github.com/vardecab/um
 - [regexr](https://regexr.com/)
 ### Other
 - [Flaticon / Freepik](https://www.flaticon.com/)
+
+## Contributing
+
+![](https://img.shields.io/github/issues/vardecab/kindle-words)
+
+If you found a bug or want to propose a feature, feel free to visit [the Issues page](https://github.com/vardecab/kindle-words/issues).

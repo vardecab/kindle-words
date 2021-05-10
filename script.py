@@ -13,9 +13,10 @@ sys.stderr = io.TextIOWrapper(sys.stderr.detach(), encoding = 'utf-8')
 # imports
 from sys import platform # check platform (Windows/macOS)
 if platform == "darwin":
-    import pync
+    import pync # macOS notifications
 elif platform == 'win32':
-    import win10toast_click
+    from win10toast_click import ToastNotifier # Windows 10 notifications
+    toaster = ToastNotifier() # initialize win10toast
 
 ### path to file: https://www.journaldev.com/15642/python-switch-case
 if platform == 'win32':
