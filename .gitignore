@@ -27,3 +27,5 @@ __pycache__
 rebuild.bat
 kindle-words_*.exe
 script.exe
+releases/*
+pack.bat
