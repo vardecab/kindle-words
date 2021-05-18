@@ -122,6 +122,7 @@ read_source_file = [word.replace('’','') for word in read_source_file] # remov
 read_source_file = [word.replace('—','') for word in read_source_file] # remove character
 read_source_file = [word.replace('?','') for word in read_source_file] # remove character
 read_source_file = [word.replace('!','') for word in read_source_file] # remove character
+read_source_file = [word.replace('"','') for word in read_source_file] # remove character
 read_source_file = [word.replace('‘','') for word in read_source_file] # remove character
 read_source_file = [word.replace('==========','') for word in read_source_file] # remove characters
 

@@ -72,6 +72,7 @@ python script.py
 
 ## Release History
 
+- 1.5.2: Added one more rule to clean the data.
 - 1.5.1: Fixed Windows 10 notifications bug.
 - 1.5: Added language detection to skip translation of words already in desired language.
 - 1.4: Added notifications for macOS & Windows.
