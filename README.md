@@ -1,5 +1,12 @@
 # kindle-words
 
+![Not Maintained](https://img.shields.io/badge/Maintenance%20Level-Not%20Maintained-yellow.svg)
+
+<br>
+<hr>
+<br>
+<br>
+
 ![](https://img.shields.io/badge/platform-Windows%20%7C%20macOS-blue)
 
 > Do something useful with your Kindle notes :) This script extracts individual words from `My Clippings` file hidden on your Kindle e-reader, translates them using Google Translate and exports the pair "original word" → "translation" into a `.txt` file from which you can learn these words or import them into an application such as [Quizlet](https://quizlet.com/).
