@@ -1,16 +1,19 @@
-### start + run time
+# ==================================== #
+#             kindle-words             #
+# ==================================== #
+
+# --------- start + run time --------- #
 import time
 start_time = time.time() 
 print("Starting...")
 
-### *NOTE: fix for "'charmap' codec can't encode character (...)" problem; https://stackoverflow.com/questions/56995919/change-python-3-7-default-encoding-from-cp1252-to-cp65001-aka-utf-8
+# *NOTE: fix for "'charmap' codec can't encode character (...)" problem; https://stackoverflow.com/questions/56995919/change-python-3-7-default-encoding-from-cp1252-to-cp65001-aka-utf-8
 import sys
 import io
 sys.stdout = io.TextIOWrapper(sys.stdout.detach(), encoding = 'utf-8')
 sys.stderr = io.TextIOWrapper(sys.stderr.detach(), encoding = 'utf-8')
 
-### notifications 
-# imports
+# ----------- notifications ---------- #
 from sys import platform # check platform (Windows/macOS)
 if platform == "darwin":
     import pync # macOS notifications
@@ -18,7 +21,8 @@ elif platform == 'win32':
     from win10toast_click import ToastNotifier # Windows 10 notifications
     toaster = ToastNotifier() # initialize win10toast
 
-### path to file: https://www.journaldev.com/15642/python-switch-case
+# ----------- path to file ----------- #
+# https://www.journaldev.com/15642/python-switch-case
 if platform == 'win32':
     path = {
     'C' : r'C:\documents\My Clippings.txt',
@@ -31,27 +35,27 @@ if platform == 'win32':
     'f' : r'F:\documents\My Clippings.txt'
     }
 
-### input timeout
+# ----------- input timeout ---------- #
 from inputimeout import inputimeout, TimeoutOccurred # input timeout: https://pypi.org/project/inputimeout/
 # timeout_time = 0 # *NOTE: test
 timeout_time = 5 # *NOTE: prod
 print(f'Script will wait {timeout_time} seconds for the input and then will continue with a default value.')
 
-# select source language
+# ------ select source language ------ #
 try:
     select_source_language = inputimeout(prompt="Enter the source language (default: en): ", timeout=timeout_time)
 except TimeoutOccurred:
     print ("Time ran out, selecting default source language (en)...")
     select_source_language = 'en'
 
-# select target language
+# ------ select target language ------ #
 try:
     select_target_language = inputimeout(prompt="Enter the target language (default: pl): ", timeout=timeout_time)
 except TimeoutOccurred:
     print ("Time ran out, selecting default target language (pl)...")
     select_target_language = 'pl'
 
-# select Kindle drive letter
+# ---- select Kindle drive letter ---- #
 if platform == 'win32': # Windows
     try:
         kindle_drive_letter = inputimeout(prompt="Enter the drive letter that is assigned to your Kindle (C/D/E/F) (default: D): ", timeout=timeout_time)
@@ -92,14 +96,47 @@ elif platform == "darwin": # macOS
         print ("Looks like this name doesn't work. Try a different one next time. Exiting...") 
         exit()
 
-### create output & data folders
+# ---------- backup the file --------- #
+import shutil 
+from datetime import datetime # add current date to file name
+import os
+
+this_run_datetime = datetime.strftime(datetime.now(), '%y%m%d') # eg. 210120
+
+# Windows location 
+try:
+    sourceLocation = path.get(kindle_drive_letter,r'x:\documents\My Clippings.txt')
+    moveToLocation = r"G:\My Drive\Betterment\Books\#Books' Notes"
+    shutil.copy2(sourceLocation, moveToLocation)
+except:
+    pass
+
+try:
+    os.rename(moveToLocation + "\My Clippings.txt", moveToLocation + "\My Clippings - " + this_run_datetime + ".txt")
+except: 
+    pass
+
+# macOS
+try:
+    sourceLocation = path.get(kindle_drive_letter,r'x:\documents\My Clippings.txt')
+    moveToLocation = r"/Volumes/GoogleDrive/My Drive/Betterment/Books/#Books' Notes"
+    shutil.copy2(sourceLocation, moveToLocation)
+except:
+    pass
+
+try:
+    os.rename(moveToLocation + "/My Clippings.txt", moveToLocation + "/My Clippings - " + this_run_datetime + ".txt")
+except: 
+    pass
+
+# --- create output & data folders --- #
 import os
 if not os.path.exists('output'):
     os.makedirs('output')
 if not os.path.exists('data'):
     os.makedirs('data')
 
-### show the last word that was added on the previous run 
+# --- show the last word that was added on the previous run --- #
 try: 
     with open('output/output-original_words.txt', 'r') as file:
         lines = file.read().splitlines()
@@ -109,7 +146,7 @@ try:
 except FileNotFoundError:
     print('First run - no file to load data.')
 
-### list cleanup 
+# ----------- list cleanup ----------- #
 read_source_file = [x for x in read_source_file if not any(x1.isdigit() for x1 in x)] # remove numbers
 read_source_file = [word.replace('\n','') for word in read_source_file] # remove character
 read_source_file = [word.replace(',','') for word in read_source_file] # remove character
@@ -126,7 +163,7 @@ read_source_file = [word.replace('"','') for word in read_source_file] # remove 
 read_source_file = [word.replace('‘','') for word in read_source_file] # remove character
 read_source_file = [word.replace('==========','') for word in read_source_file] # remove characters
 
-### add single words to the new list aka remove sentences etc.
+# --- add single words to the new list aka remove sentences etc. --- #
 single_words = [] # new list
 for element in range(len(read_source_file)):
     if len(read_source_file[element].split()) == 1: # only single words
@@ -139,7 +176,7 @@ print('Removing duplicates...')
 single_words = list(dict.fromkeys(single_words)) # remove duplicates; https://www.w3schools.com/python/python_howto_remove_duplicates.asp
 print ("There are", len(single_words), 'unique words in My Clippings file.')
 
-### skip words already in target_language
+# -- skip words already in target_language -- # 
 from langdetect import detect # language detection
 
 words = []
@@ -149,7 +186,7 @@ for word in range(len(single_words)):
         words.append(single_words[word])
 print(f'Without words already in {select_target_language.upper()}, there are {len(words)} words.')
 
-### open saved list
+# ---------- open saved list --------- #
 import pickle
 try: 
     with open ('data/saved_location', 'rb') as file_import:
@@ -158,7 +195,7 @@ try:
 except FileNotFoundError:
     print('First run - no file to load data.')
 
-### comparison 
+# ------------ comparison ------------ #
 try: 
     difference = set(words) - set(saved_list) # what's new in words[]
     if len(saved_list) == 0:
@@ -173,7 +210,7 @@ if len(to_translate) > 0:
     with open(r"output/output-original_words.txt", "w", encoding="utf-8") as output: 
         output.write(output_lines.lower())
 
-    ### translation
+    # ------------ translation ----------- #
     # split list to smaller lists to get around 5000-character-limit of deep-translator package
     chunks = [to_translate[x:x+250] for x in range(0, len(to_translate), 250)] # split into sublists of 250 words each
     print('List of words was split into:', len(chunks), 'chunk(s) for translation.') # debug; how many sublists are in this master list
@@ -181,7 +218,7 @@ if len(to_translate) > 0:
     from deep_translator import GoogleTranslator
     print('Translating...')
 
-    ### export a pair: original → translated 
+    # -- export a pair: original → translated -- #
     counter = 0
     while counter <= len(chunks)-1: # -1 to make it work when len(chunks) == 1 and chunks[0] is the only one
         translated_list = [] # new list
@@ -193,23 +230,23 @@ if len(to_translate) > 0:
         counter += 1
     print('Words are translated & final file is exported!')
 
-    ### notifications 
+    # ----------- notifications ---------- #
     if platform == "darwin":
         pync.notify(f'Translated {len(to_translate)} words.', title='kindle-words', contentImage="https://i.postimg.cc/3R0tLQ3H/translation.png", sound="Funk") # appIcon="" doesn't work, using contentImage instead
     elif platform == "win32":
         toaster.show_toast(msg=f'Translated {len(to_translate)} words.', title="kindle-words",  icon_path="./icons/translation.ico", duration=None, threaded=True) # duration=None - leave notification in Notification Center; threaded=True - rest of the script will be allowed to be executed while the notification is still active
 
-    ### export list for future comparison 
+    # --- export list for future comparison --- #
     with open('data/saved_location', 'wb') as file_export:
         pickle.dump(words, file_export)
 
-    ### runtime 
+    # -------------- runtime ------------- #
     end_time = time.time() # run time end 
     run_time = round(end_time-start_time,2)
     print(len(to_translate), 'words were translated in:', run_time, "seconds (" + str(round(run_time/60,2)), "minutes).")
     
 else:
-    ### notifications 
+    # ----------- notifications ---------- #
     if platform == "darwin":
         pync.notify(f'Nothing new to translate.', title='kindle-words', contentImage="https://i.postimg.cc/3R0tLQ3H/translation.png", sound="Funk") # appIcon="" doesn't work, using contentImage instead
     elif platform == "win32":
@@ -217,7 +254,7 @@ else:
 
     print('Nothing new to translate. Exiting...')
 
-    ### runtime 
+    # -------------- runtime ------------- #
     end_time = time.time() # run time end 
     run_time = round(end_time-start_time,2)
     print("Script run time:", run_time, "seconds. That's", round(run_time/60,2), "minutes.")

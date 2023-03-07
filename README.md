@@ -1,5 +1,11 @@
 # kindle-words
 
+![Not Maintained](https://img.shields.io/badge/Maintenance%20Level-Not%20Maintained-yellow.svg)
+
+<b>As of early 2023, it's likely the script doesn't work due to API changes.</b>
+
+<br><hr><br>
+
 ![](https://img.shields.io/badge/platform-Windows%20%7C%20macOS-blue)
 
 > Do something useful with your Kindle notes :) This script extracts individual words from `My Clippings` file hidden on your Kindle e-reader, translates them using Google Translate and exports the pair "original word" → "translation" into a `.txt` file from which you can learn these words or import them into an application such as [Quizlet](https://quizlet.com/).
@@ -72,6 +78,7 @@ python script.py
 
 ## Release History
 
+- 1.6: Added backup functionality to save `My Clippings` file locally
 - 1.5.2: Added one more rule to clean the data.
 - 1.5.1: Fixed Windows 10 notifications bug.
 - 1.5: Added language detection to skip translation of words already in desired language.
